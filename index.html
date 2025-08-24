@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nuestra Historia de Amor</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header h1 {
+            font-size: 3.5rem;
+            margin-bottom: 10px;
+            animation: fadeInDown 1s ease-out;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            font-style: italic;
+            animation: fadeInUp 1s ease-out 0.5s both;
+        }
+
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+
+        .media-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            transform: translateY(0);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .media-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.2);
+        }
+
+        .media-container {
+            position: relative;
+            width: 100%;
+            height: 250px;
+            overflow: hidden;
+        }
+
+        .media-container img,
+        .media-container video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .media-card:hover .media-container img,
+        .media-card:hover .media-container video {
+            transform: scale(1.05);
+        }
+
+        .media-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.7) 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .media-card:hover .media-overlay {
+            opacity: 1;
+        }
+
+        .card-content {
+            padding: 25px;
+            text-align: center;
+        }
+
+        .custom-button {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(255,107,107,0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .custom-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255,107,107,0.4);
+        }
+
+        .custom-button:active {
+            transform: translateY(0);
+        }
+
+        .custom-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .custom-button:hover::before {
+            left: 100%;
+        }
+
+        .date-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(255,255,255,0.9);
+            color: #333;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .floating-hearts {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .heart {
+            position: absolute;
+            color: rgba(255,255,255,0.1);
+            font-size: 2rem;
+            animation: floating 6s ease-in-out infinite;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 50px;
+            color: white;
+            font-style: italic;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes floating {
+            0%, 100% {
+                transform: translateY(0px) rotate(0deg);
+                opacity: 0;
+            }
+            50% {
+                transform: translateY(-100px) rotate(180deg);
+                opacity: 1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.5rem;
+            }
+            
+            .gallery {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                padding: 15px;
+            }
+        }
+
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.8);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 10% auto;
+            padding: 30px;
+            border-radius: 20px;
+            width: 80%;
+            max-width: 500px;
+            text-align: center;
+            position: relative;
+            animation: modalSlideIn 0.3s ease-out;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            position: absolute;
+            right: 15px;
+            top: 15px;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: #000;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-hearts">
+        <div class="heart" style="left: 10%; animation-delay: 0s;">💕</div>
+        <div class="heart" style="left: 20%; animation-delay: 1s;">❤️</div>
+        <div class="heart" style="left: 30%; animation-delay: 2s;">💖</div>
+        <div class="heart" style="left: 40%; animation-delay: 3s;">💝</div>
+        <div class="heart" style="left: 50%; animation-delay: 4s;">💕</div>
+        <div class="heart" style="left: 60%; animation-delay: 5s;">❤️</div>
+        <div class="heart" style="left: 70%; animation-delay: 1.5s;">💖</div>
+        <div class="heart" style="left: 80%; animation-delay: 2.5s;">💝</div>
+        <div class="heart" style="left: 90%; animation-delay: 3.5s;">💕</div>
+    </div>
+
+    <div class="container">
+        <header class="header">
+            <h1>Nuestra Historia de Amor</h1>
+            <p>Cada momento contigo es un tesoro que guardo en mi corazón</p>
+        </header>
+
+        <div class="gallery">
+            <!-- Tarjeta con foto -->
+            <div class="media-card">
+                <div class="media-container">
+                    <img src="C:\Users\Administrator\OneDrive\Fotos\WhatsApp Image 2025-05-08 at 10.17.58 PM.jpeg" alt="Pareja caminando en la playa">
+                    <div class="media-overlay"></div>
+                    <div class="date-badge">TE AMO</div>
+                </div>
+                <div class="card-content">
+                    <button class="custom-button" onclick="showMessage('Este momento fue muy bonito en donde senti una union para toda la vida')">
+                        Eres mi luz ✨
+                    </button>
+                </div>
+            </div>
+
+            <!-- Tarjeta con video -->
+            <div class="media-card">
+                <div class="media-container">
+                    <video controls poster="C:\Users\Administrator\OneDrive\Fotos\25.mp4"
+                        <source src="C:\Users\Administrator\OneDrive\Fotos\25.mp4" type="video/mp4">
+                        Tu navegador no soporta videos HTML5.
+                    </video>
+                    <div class="date-badge">TE AMO</div>
+                </div>
+                <div class="card-content">
+                    <button class="custom-button" onclick="showMessage('Contigo he descubierto que el amor verdadero no es solo un sentimiento, es una decisión que tomo cada día. Te elijo una y mil veces más.')">
+                        Te elijo siempre 💝
+                    </button>
+                </div>
+            </div>
+
+             <!-- Tarjeta con video -->
+            <div class="media-card">
+                <div class="media-container">
+                    <video controls poster="C:\Users\Administrator\OneDrive\Fotos\25.mp4"
+                        <source src="C:\Users\Administrator\OneDrive\Fotos\WhatsApp Video 2025-08-23 at 10.42.42 AM.mp4" type="video/mp4">
+                        Tu navegador no soporta videos HTML5.
+                    </video>
+                    <div class="date-badge">TE AMO</div>
+                </div>
+                <div class="card-content">
+                    <button class="custom-button" onclick="showMessage('Gracias por haberme permitido experimentar el verdadero amor.')">
+                        Gracias por todo 💝
+                    </button>
+                </div>
+            </div>
+
+             <!-- Tarjeta con video -->
+            <div class="media-card">
+                <div class="media-container">
+                    <video controls poster="C:\Users\Administrator\OneDrive\Fotos\25.mp4"
+                        <source src="C:\Users\Administrator\OneDrive\Fotos\WhatsApp Video 2025-08-23 at 11.29.54 AM.mp4" type="video/mp4">
+                        Tu navegador no soporta videos HTML5.
+                    </video>
+                    <div class="date-badge">TE AMO</div>
+                </div>
+                <div class="card-content">
+                    <button class="custom-button" onclick="showMessage('Desde que te vi supe que debi conocerte y cuando vi tus ojos me enamore por primera vez.')">
+                        Eres unica 💝
+                    </button>
+                </div>
+            </div>
+
+             <!-- Tarjeta con video -->
+            <div class="media-card">
+                <div class="media-container">
+                    <video controls poster="C:\Users\Administrator\OneDrive\Fotos\25.mp4"
+                        <source src="C:\Users\Administrator\OneDrive\Fotos\WhatsApp Video 2025-08-23 at 11.29.54 AM (1).mp4" type="video/mp4">
+                        Tu navegador no soporta videos HTML5.
+                    </video>
+                    <div class="date-badge">TE AMO</div>
+                </div>
+                <div class="card-content">
+                    <button class="custom-button" onclick="showMessage('Eres es sueño que siempre quise cumplir, siempre uise tener y siempre quise anhelar')">
+                        Eres mi Proposito 💝
+                    </button>
+                </div>
+            </div>
+
+            <!-- Otra tarjeta con foto -->
+            <div class="media-card">
+                <div class="media-container">
+                    <img src="C:\Users\Administrator\OneDrive\Fotos\WhatsApp Image 2025-05-08 at 10.10.35 PM - copia.jpeg" alt="Pareja abrazándose">
+                    <div class="media-overlay"></div>
+                    <div class="date-badge">TE EXTRAÑO</div>
+                </div>
+                <div class="card-content">
+                    <button class="custom-button" onclick="showMessage('En tus brazos encontré mi hogar, en tu mirada mi paz, y en tu corazón mi lugar en este mundo. Juntos somos lo mejor.')">
+                        Mi hogar eres tú 🏠
+                    </button>
+                </div>
+            </div>
+
+            <!-- Tarjeta con otra foto -->
+            <div class="media-card">
+                <div class="media-container">
+                    <img src="C:\Users\Administrator\OneDrive\Fotos\WhatsApp Image 2025-08-22 at 11.04.08 PM.jpeg" alt="Pareja viendo el atardecer">
+                    <div class="media-overlay"></div>
+                    <div class="date-badge">ME SIENTO SEGURO CONTIGO</div>
+                </div>
+                <div class="card-content">
+                    <button class="custom-button" onclick="showMessage('Cada atardecer contigo es una promesa de que mañana será aún más hermoso. Tu amor es mi horizonte infinito.')">
+                        Infinitos atardeceres 🌅
+                    </button>
+                </div>
+            </div>
+
+            <!-- Última tarjeta con foto -->
+            <div class="media-card">
+                <div class="media-container">
+                    <img src="C:\Users\Administrator\OneDrive\Fotos\WhatsApp Image 2025-08-22 at 10.33.07 PM.jpeg" alt="Pareja riendo juntos">
+                    <div class="media-overlay"></div>
+                    <div class="date-badge">UNIDOS</div>
+                </div>
+                <div class="card-content">
+                    <button class="custom-button" onclick="showMessage('Tu risa es la melodía más hermosa que existe. Contigo cada día es una nueva razón para sonreír y agradecer.')">
+                        Nuestra felicidad 😊
+                    </button>
+                </div>
+            </div>
+
+            <!-- Última tarjeta con foto -->
+            <div class="media-card">
+                <div class="media-container">
+                    <img src="C:\Users\Administrator\OneDrive\Fotos\WhatsApp Image 2025-05-08 at 10.18.26 PM.jpeg" alt="Pareja riendo juntos">
+                    <div class="media-overlay"></div>
+                    <div class="date-badge">QUIERO PROTEGERTE TODO EL TIEMPO</div>
+                </div>
+                <div class="card-content">
+                    <button class="custom-button" onclick="showMessage('Cada cosa que te nace hacer y/o decir de corazon me hace sentir muy buen, la mujer correcta te apoya en todo momento y ese espoyo fuiste tu.')">
+                        Me haces Feliz 😊
+                    </button>
+                </div>
+            </div>
+
+            <!-- Última tarjeta con foto -->
+            <div class="media-card">
+                <div class="media-container">
+                    <img src="C:\Users\Administrator\OneDrive\Fotos\WhatsApp Image 2025-05-24 at 1.13.03 AM.jpeg" alt="Pareja riendo juntos">
+                    <div class="media-overlay"></div>
+                    <div class="date-badge">PARA MI FUISTE, ERES Y SIEMPRE SERAS LA MUJER INDICADA PARA MI</div>
+                </div>
+                <div class="card-content">
+                    <button class="custom-button" onclick="showMessage('Cada salida fue diferente, risas, llantos, felicidd tristeza pero a pesar de todo tu eres quien me ha ayudado a levantar, gracias de verdad')">
+                        Jamas dejes de ser tu misma 😊
+                    </button>
+                </div>
+            </div>
+
+            <!-- Última tarjeta con foto -->
+            <div class="media-card">
+                <div class="media-container">
+                    <img src="C:\Users\Administrator\OneDrive\Fotos\WhatsApp Image 2025-08-22 at 10.48.19 PM.jpeg" alt="Pareja riendo juntos">
+                    <div class="media-overlay"></div>
+                    <div class="date-badge">MOMENTOS DE FELICIDAD</div>
+                </div>
+                <div class="card-content">
+                    <button class="custom-button" onclick="showMessage('Comenzando nuestra vida unidos no pensaba en que una persona como tu llegaria a ser capaz de enamorarse de una persona como yo, no lo tengo todo pero lo mas importante que te he brindado es AMOR')">
+                        Recuerdos 😊
+                    </button>
+                </div>
+            </div>
+
+            <!-- Última tarjeta con foto -->
+            <div class="media-card">
+                <div class="media-container">
+                    <img src="C:\Users\Administrator\OneDrive\Fotos\WhatsApp Image 2025-05-08 at 10.16.09 PM (1).jpeg" alt="Pareja riendo juntos">
+                    <div class="media-overlay"></div>
+                    <div class="date-badge">Polos opuestros </div>
+                </div>
+                <div class="card-content">
+                    <button class="custom-button" onclick="showMessage('Eres esa mujer que me brinda lo que necesito, lo que me hace falta y con unas palabras tuyas, con un abrazo.')">
+                        Juntos😊
+                    </button>
+                </div>
+            </div>
+
+            <!-- Última tarjeta con foto -->
+            <div class="media-card">
+                <div class="media-container">
+                    <img src="C:\Users\Administrator\OneDrive\Fotos\WhatsApp Image 2025-05-24 at 12.53.47 AM.jpeg" alt="Pareja riendo juntos">
+                    <div class="media-overlay"></div>
+                    <div class="date-badge">ERES LA MAS INTELIGENTE</div>
+                </div>
+                <div class="card-content">
+                    <button class="custom-button" onclick="showMessage('Eres una mujer muy inteligente, te admiro porque has logado muchas cosas poer ti misma y eres inspiracion para muchas personas aunque no te des cuenta, eres unica y capaz de hacer muchas cosas si te lo propones')">
+                        Mi admiracion😊
+                    </button>
+                </div>
+            </div>
+
+            <!-- Última tarjeta con foto -->
+            <div class="media-card">
+                <div class="media-container">
+                    <img src="C:\Users\Administrator\OneDrive\Fotos\' '.png" alt="Pareja riendo juntos">
+                    <div class="media-overlay"></div>
+                    <div class="date-badge">25/01/2023</div>
+                </div>
+                <div class="card-content">
+                    <button class="custom-button" onclick="showMessage('Tengo la esperanza de que este amor que siemto por ti me transforme para bien, no te prometo pero si estoy seguro de que seguiremos juntos para un mejor futuro')">
+                        25/03/2023 😊
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <footer class="footer">
+            <p>"El amor no es solo mirarse el uno al otro, es mirar juntos en la misma dirección"</p>
+        </footer>
+    </div>
+
+    <!-- Modal para mostrar mensajes -->
+    <div id="messageModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 style="color: #667eea; margin-bottom: 20px;">💕 Mensaje de Amor 💕</h2>
+            <p id="modalMessage" style="font-size: 1.1rem; line-height: 1.6; color: #555;"></p>
+        </div>
+    </div>
+
+    <script>
+        // Función para mostrar mensaje personalizado
+        function showMessage(message) {
+            const modal = document.getElementById('messageModal');
+            const modalMessage = document.getElementById('modalMessage');
+            
+            modalMessage.textContent = message;
+            modal.style.display = 'block';
+            
+            // Efecto de corazones flotantes al abrir modal
+            createFloatingHearts();
+        }
+
+        // Cerrar modal
+        const modal = document.getElementById('messageModal');
+        const span = document.getElementsByClassName('close')[0];
+
+        span.onclick = function() {
+            modal.style.display = 'none';
+        }
+
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        }
+
+        // Función para crear corazones flotantes
+        function createFloatingHearts() {
+            const hearts = ['💕', '❤️', '💖', '💝', '💗'];
+            
+            for (let i = 0; i < 5; i++) {
+                setTimeout(() => {
+                    const heart = document.createElement('div');
+                    heart.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+                    heart.style.position = 'fixed';
+                    heart.style.left = Math.random() * 100 + '%';
+                    heart.style.bottom = '0px';
+                    heart.style.fontSize = '2rem';
+                    heart.style.color = '#ff6b6b';
+                    heart.style.pointerEvents = 'none';
+                    heart.style.zIndex = '999';
+                    heart.style.animation = 'floating 3s ease-out forwards';
+                    
+                    document.body.appendChild(heart);
+                    
+                    setTimeout(() => {
+                        heart.remove();
+                    }, 3000);
+                }, i * 200);
+            }
+        }
+
+        // Animación de entrada para las tarjetas
+        const cards = document.querySelectorAll('.media-card');
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        cards.forEach((card, index) => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(50px)';
+            card.style.transition = `opacity 0.6s ease ${index * 0.1}s, transform 0.6s ease ${index * 0.1}s`;
+            observer.observe(card);
+        });
+    </script>
+</body>
+</html>
